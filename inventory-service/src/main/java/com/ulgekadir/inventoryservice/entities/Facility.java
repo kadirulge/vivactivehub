@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -23,7 +24,7 @@ public class Facility {
     private String phone;
     private String email;
     private String address;
-    private double hourlyRate;
+    private BigDecimal hourlyRate;
     private String description;
     private State state;
 

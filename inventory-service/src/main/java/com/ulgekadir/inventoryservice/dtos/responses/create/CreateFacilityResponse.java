@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Getter
@@ -16,12 +17,14 @@ import java.util.UUID;
 public class CreateFacilityResponse {
     private UUID id;
     private UUID categoryId;
+    private String categoryName;
     private UUID institutionId;
+    private String institutionName;
     private String name;
     private String phone;
     private String email;
     private String address;
-    private double hourlyRate;
+    private BigDecimal hourlyRate;
     private String description;
     private State state;
 }
