@@ -1,5 +1,7 @@
 package com.ulgekadir.inventoryservice.service;
 
+import com.ulgekadir.commonpackage.events.FacilityCreatedEvent;
+import com.ulgekadir.commonpackage.utils.kafka.KafkaProducer;
 import com.ulgekadir.commonpackage.utils.mappers.ModelMapperService;
 import com.ulgekadir.inventoryservice.dtos.requests.create.CreateFacilityRequest;
 import com.ulgekadir.inventoryservice.dtos.requests.update.UpdateFacilityRequest;
@@ -11,17 +13,18 @@ import com.ulgekadir.inventoryservice.entities.Facility;
 import com.ulgekadir.inventoryservice.entities.enums.State;
 import com.ulgekadir.inventoryservice.repository.FacilityRepository;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class FacilityService {
     private final FacilityRepository repository;
     private final ModelMapperService mapper;
+    private final KafkaProducer producer;
+
 
     public List<GetAllFacilitiesResponse> getAll() {
         List<Facility>facilities = repository.findAll();
@@ -43,6 +46,7 @@ public class FacilityService {
         facility.setId(UUID.randomUUID());
         facility.setState(State.AVAILABLE);
         Facility createdFacility = repository.save(facility);
+        sendKafkaFacilityCreatedEvent(createdFacility);
         CreateFacilityResponse response = mapper.forResponse().map(createdFacility, CreateFacilityResponse.class);
         return response;
     }
@@ -58,4 +62,10 @@ public class FacilityService {
     public void delete(UUID id) {
         repository.deleteById(id);
     }
+
+    private void sendKafkaFacilityCreatedEvent(Facility createdFacility) {
+        FacilityCreatedEvent event = mapper.forResponse().map(createdFacility, FacilityCreatedEvent.class);
+        producer.sendMessage(event, "facility-created");
+    }
+
 }

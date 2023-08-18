@@ -19,7 +19,7 @@ public class GetFilterResponse {
     private UUID facilityId;
     private UUID institutionId;
     private UUID categoryId;
-    private UUID institutionName;
+    private String institutionName;
     private String categoryName;
     private String name;
     private String phone;

@@ -1,4 +1,4 @@
-package com.ulgekadir.filterservice.dtos;
+package com.ulgekadir.commonpackage.events;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,10 +10,9 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class GetAllFiltersResponse {
-    private String id;
+@NoArgsConstructor
+public class FacilityCreatedEvent implements Event{
     private UUID facilityId;
     private UUID institutionId;
     private UUID categoryId;
