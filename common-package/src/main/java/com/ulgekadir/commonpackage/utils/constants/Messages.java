@@ -4,6 +4,7 @@ public class Messages {
     public static class Facility {
         public static final String NotExists = "FACILITY_NOT_EXISTS";
         public static final String Exists = "FACILITY_ALREADY_EXISTS";
+        public static final String NotAvailable = "FACILITY_NOT_AVAILABLE";
     }
 
     public static class Category {

@@ -40,4 +40,8 @@ public class FilterService {
         repository.deleteById(id);
     }
 
+    public void deleteByFacilityId(UUID facilityId) {
+        repository.deleteByFacilityId(facilityId);
+    }
+
 }

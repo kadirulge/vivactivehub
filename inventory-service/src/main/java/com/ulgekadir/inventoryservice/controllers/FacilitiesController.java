@@ -1,5 +1,6 @@
 package com.ulgekadir.inventoryservice.controllers;
 
+import com.ulgekadir.commonpackage.utils.dtos.ClientResponse;
 import com.ulgekadir.inventoryservice.dtos.requests.create.CreateFacilityRequest;
 import com.ulgekadir.inventoryservice.dtos.requests.update.UpdateFacilityRequest;
 import com.ulgekadir.inventoryservice.dtos.responses.create.CreateFacilityResponse;
@@ -47,5 +48,6 @@ public class FacilitiesController {
     public void delete(@PathVariable UUID id) {
         service.delete(id);
     }
+
 
 }
