@@ -44,4 +44,8 @@ public class FilterService {
         repository.deleteByFacilityId(facilityId);
     }
 
+    public void deleteAllByInstitutionId(UUID institutionId){
+        repository.deleteAllByInstitutionId(institutionId);
+    }
+
 }

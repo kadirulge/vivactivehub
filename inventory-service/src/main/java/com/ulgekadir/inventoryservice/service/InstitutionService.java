@@ -1,7 +1,9 @@
 package com.ulgekadir.inventoryservice.service;
 
+import com.ulgekadir.commonpackage.events.InstitutionDeletedEvent;
 import com.ulgekadir.commonpackage.exceptions.BusinessException;
 import com.ulgekadir.commonpackage.utils.constants.Messages;
+import com.ulgekadir.commonpackage.utils.kafka.KafkaProducer;
 import com.ulgekadir.commonpackage.utils.mappers.ModelMapperService;
 import com.ulgekadir.inventoryservice.dtos.requests.create.CreateInstitutionRequest;
 import com.ulgekadir.inventoryservice.dtos.requests.update.UpdateInstitutionRequest;
@@ -24,6 +26,8 @@ public class InstitutionService {
     private final InstitutionRepository repository;
     private final ModelMapperService mapper;
     private final InstitutionBusinessRules rules;
+    private final KafkaProducer producer;
+
 
     public List<GetAllInstitutionsResponse> getAll() {
         List<Institution>institutions = repository.findAll();
@@ -61,4 +65,9 @@ public class InstitutionService {
         rules.checkIfInstitutionExists(id);
         repository.deleteById(id);
     }
+
+    private void sendKafkaInstitutionDeletedEvent(UUID id) {
+        producer.sendMessage(new InstitutionDeletedEvent(id), "institution-deleted");
+    }
+
 }
