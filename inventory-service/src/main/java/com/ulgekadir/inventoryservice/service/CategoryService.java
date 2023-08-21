@@ -1,5 +1,7 @@
 package com.ulgekadir.inventoryservice.service;
 
+import com.ulgekadir.commonpackage.exceptions.BusinessException;
+import com.ulgekadir.commonpackage.utils.constants.Messages;
 import com.ulgekadir.commonpackage.utils.mappers.ModelMapperService;
 import com.ulgekadir.inventoryservice.dtos.requests.create.CreateCategoryRequest;
 import com.ulgekadir.inventoryservice.dtos.requests.update.UpdateCategoryRequest;
@@ -9,6 +11,7 @@ import com.ulgekadir.inventoryservice.dtos.responses.get.GetCategoryResponse;
 import com.ulgekadir.inventoryservice.dtos.responses.update.UpdateCategoryResponse;
 import com.ulgekadir.inventoryservice.entities.Category;
 import com.ulgekadir.inventoryservice.repository.CategoryRepository;
+import com.ulgekadir.inventoryservice.service.rules.CategoryBusinessRules;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,7 @@ import java.util.UUID;
 public class CategoryService {
     private final CategoryRepository repository;
     private final ModelMapperService mapper;
+    private final CategoryBusinessRules rules;
 
     public List<GetAllCategoriesResponse> getAll() {
         List<Category>categories = repository.findAll();
@@ -31,7 +35,7 @@ public class CategoryService {
     }
 
     public GetCategoryResponse getById(UUID id) {
-        Category category = repository.findById(id).orElseThrow();
+        Category category = repository.findById(id).orElseThrow( () -> new BusinessException(Messages.Category.NotExists));
         GetCategoryResponse response = mapper.forResponse().map(category, GetCategoryResponse.class);
         return response;
     }
@@ -45,6 +49,7 @@ public class CategoryService {
     }
 
     public UpdateCategoryResponse update(UUID id, UpdateCategoryRequest request) {
+        rules.checkIfCategoryExists(id);
         Category category = mapper.forRequest().map(request, Category.class);
         category.setId(id);
         repository.save(category);
@@ -53,6 +58,7 @@ public class CategoryService {
     }
 
     public void delete(UUID id) {
+        rules.checkIfCategoryExists(id);
         repository.deleteById(id);
     }
 }

@@ -6,12 +6,13 @@ import com.ulgekadir.inventoryservice.entities.Facility;
 import com.ulgekadir.inventoryservice.entities.enums.State;
 import com.ulgekadir.inventoryservice.repository.FacilityRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class FacilityBusinessRules {
     private final FacilityRepository repository;
 

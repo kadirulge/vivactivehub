@@ -1,5 +1,7 @@
 package com.ulgekadir.inventoryservice.service;
 
+import com.ulgekadir.commonpackage.exceptions.BusinessException;
+import com.ulgekadir.commonpackage.utils.constants.Messages;
 import com.ulgekadir.commonpackage.utils.mappers.ModelMapperService;
 import com.ulgekadir.inventoryservice.dtos.requests.create.CreateInstitutionRequest;
 import com.ulgekadir.inventoryservice.dtos.requests.update.UpdateInstitutionRequest;
@@ -9,6 +11,7 @@ import com.ulgekadir.inventoryservice.dtos.responses.get.GetInstitutionResponse;
 import com.ulgekadir.inventoryservice.dtos.responses.update.UpdateInstitutionResponse;
 import com.ulgekadir.inventoryservice.entities.Institution;
 import com.ulgekadir.inventoryservice.repository.InstitutionRepository;
+import com.ulgekadir.inventoryservice.service.rules.InstitutionBusinessRules;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,7 @@ import java.util.UUID;
 public class InstitutionService {
     private final InstitutionRepository repository;
     private final ModelMapperService mapper;
+    private final InstitutionBusinessRules rules;
 
     public List<GetAllInstitutionsResponse> getAll() {
         List<Institution>institutions = repository.findAll();
@@ -31,7 +35,7 @@ public class InstitutionService {
     }
 
     public GetInstitutionResponse getById(UUID id) {
-        Institution institution = repository.findById(id).orElseThrow();
+        Institution institution = repository.findById(id).orElseThrow( () -> new BusinessException(Messages.Institution.NotExists));
         GetInstitutionResponse response = mapper.forResponse().map(institution, GetInstitutionResponse.class);
         return response;
     }
@@ -45,6 +49,7 @@ public class InstitutionService {
     }
 
     public UpdateInstitutionResponse update(UUID id, UpdateInstitutionRequest request) {
+        rules.checkIfInstitutionExists(id);
         Institution institution = mapper.forRequest().map(request, Institution.class);
         institution.setId(id);
         repository.save(institution);
@@ -53,6 +58,7 @@ public class InstitutionService {
     }
 
     public void delete(UUID id) {
+        rules.checkIfInstitutionExists(id);
         repository.deleteById(id);
     }
 }
