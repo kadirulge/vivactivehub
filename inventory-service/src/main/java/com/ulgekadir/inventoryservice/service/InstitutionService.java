@@ -64,6 +64,7 @@ public class InstitutionService {
     public void delete(UUID id) {
         rules.checkIfInstitutionExists(id);
         repository.deleteById(id);
+        sendKafkaInstitutionDeletedEvent(id);
     }
 
     private void sendKafkaInstitutionDeletedEvent(UUID id) {

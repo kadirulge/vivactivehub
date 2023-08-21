@@ -40,7 +40,7 @@ public class InventoryConsumer {
 
     @KafkaListener(
             topics = "facility-updated",
-            groupId = "facility-updated"
+            groupId = "facility-update"
     )
     public void consume(FacilityUpdatedEvent event){
         service.deleteByFacilityId(event.getFacilityId());
