@@ -9,10 +9,10 @@ import java.util.UUID;
 @Slf4j
 @Component // This annotation is necessary for the fallback class to be found by Spring
 public class FacilityClientFallback implements FacilityClient {
+
     @Override
-    public ClientResponse checkIfFacilityAvailable(UUID carId) {
-        log.info("INVENTORY SERVICE IS DOWN! CheckIfFacilityAvailable");
+    public ClientResponse checkIfFacilityAvailableAndReserve(UUID facilityId) throws InterruptedException {
+        log.info("INVENTORY SERVICE IS DOWN! CheckIfFacilityAvailableAndReserve");
         throw new RuntimeException("INVENTORY SERVICE IS DOWN!");
     }
-
 }

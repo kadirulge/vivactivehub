@@ -49,9 +49,9 @@ public class FacilitiesController {
         service.delete(id);
     }
 
-    @GetMapping("/check-facility-availability/{id}")
-    public ClientResponse checkIfFacilityAvailable(@PathVariable UUID id) {
-        return service.checkIfFacilityAvailable(id);
+    @GetMapping("/check-facility-availability-then-reserve/{id}")
+    public ClientResponse checkIfFacilityAvailableThenReserve(@PathVariable UUID id) {
+        return service.checkIfFacilityAvailableThenReserve(id);
     }
 
 

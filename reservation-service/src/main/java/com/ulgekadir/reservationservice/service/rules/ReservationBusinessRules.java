@@ -17,7 +17,7 @@ public class ReservationBusinessRules {
     private final FacilityClient facilityClient;
 
     public void ensureFacilityIsAvailable(UUID facilityId) throws InterruptedException {
-        ClientResponse response = facilityClient.checkIfFacilityAvailable(facilityId);
+        ClientResponse response = facilityClient.checkIfFacilityAvailableAndReserve(facilityId);
         checkClientResponse(response);
     }
 
