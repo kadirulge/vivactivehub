@@ -16,4 +16,11 @@ public class Messages {
         public static final String NotExists = "INSTITUTION_NOT_EXISTS";
         public static final String Exists = "INSTITUTION_ALREADY_EXISTS";
     }
+
+    public static class Reservation{
+        public static final String NotExists = "RESERVATION_NOT_EXISTS";
+        public static final String Exists = "RESERVATION_ALREADY_EXISTS";
+    }
+
+
 }

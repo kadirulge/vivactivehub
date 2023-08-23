@@ -49,5 +49,10 @@ public class FacilitiesController {
         service.delete(id);
     }
 
+    @GetMapping("/check-facility-availability/{id}")
+    public ClientResponse checkIfFacilityAvailable(@PathVariable UUID id) {
+        return service.checkIfFacilityAvailable(id);
+    }
+
 
 }

@@ -5,6 +5,7 @@ import com.ulgekadir.commonpackage.events.FacilityDeletedEvent;
 import com.ulgekadir.commonpackage.events.FacilityUpdatedEvent;
 import com.ulgekadir.commonpackage.exceptions.BusinessException;
 import com.ulgekadir.commonpackage.utils.constants.Messages;
+import com.ulgekadir.commonpackage.utils.dtos.ClientResponse;
 import com.ulgekadir.commonpackage.utils.kafka.KafkaProducer;
 import com.ulgekadir.commonpackage.utils.mappers.ModelMapperService;
 import com.ulgekadir.inventoryservice.dtos.requests.create.CreateFacilityRequest;
@@ -73,6 +74,13 @@ public class FacilityService {
         sendKafkaFacilityDeletedEvent(id);
     }
 
+    public ClientResponse checkIfFacilityAvailable(UUID id) {
+        ClientResponse response = new ClientResponse();
+        validateFacilityAvailability(id, response);
+
+        return response;
+    }
+
     private void sendKafkaFacilityCreatedEvent(Facility createdFacility) {
         FacilityCreatedEvent event = mapper.forResponse().map(createdFacility, FacilityCreatedEvent.class);
         producer.sendMessage(event, "facility-created");
@@ -85,6 +93,17 @@ public class FacilityService {
 
     private void sendKafkaFacilityDeletedEvent(UUID id) {
         producer.sendMessage(new FacilityDeletedEvent(id), "facility-deleted");
+    }
+
+    private void validateFacilityAvailability(UUID id, ClientResponse response) {
+        try {
+            rules.checkIfFacilityExists(id);
+            rules.checkFacilityAvailability(id);
+            response.setSuccess(true);
+        } catch (BusinessException exception) {
+            response.setSuccess(false);
+            response.setMessage(exception.getMessage());
+        }
     }
 
 }

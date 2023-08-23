@@ -5,7 +5,6 @@ import com.ulgekadir.commonpackage.utils.constants.Messages;
 import com.ulgekadir.inventoryservice.entities.Facility;
 import com.ulgekadir.inventoryservice.entities.enums.State;
 import com.ulgekadir.inventoryservice.repository.FacilityRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
