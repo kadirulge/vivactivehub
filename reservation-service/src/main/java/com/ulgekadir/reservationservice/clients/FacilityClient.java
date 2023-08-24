@@ -14,5 +14,8 @@ public interface FacilityClient {
     @PutMapping(value = "/api/facilities/check-facility-availability-then-reserve/{facilityId}")
     ClientResponse checkIfFacilityAvailableAndReserve(@PathVariable UUID facilityId) throws InterruptedException;
 
+    @PutMapping(value = "/api/facilities/change-state-to-available/{facilityId}")
+    ClientResponse changeStateToAvailable(@PathVariable UUID facilityId) throws InterruptedException;
+
 
 }

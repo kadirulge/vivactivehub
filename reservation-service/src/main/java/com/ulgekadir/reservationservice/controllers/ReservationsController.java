@@ -45,7 +45,7 @@ public class ReservationsController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable UUID id) {
+    public void delete(@PathVariable UUID id) throws InterruptedException{
         service.delete(id);
     }
 }

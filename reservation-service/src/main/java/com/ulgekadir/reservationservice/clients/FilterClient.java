@@ -13,4 +13,7 @@ import java.util.UUID;
 public interface FilterClient {
     @PutMapping(value = "/api/filters/change-state-to-reserved/{facilityId}")
     ClientResponse changeStateToReserved(@PathVariable UUID facilityId) throws InterruptedException;
+
+    @PutMapping(value = "/api/filters/change-state-to-available/{facilityId}")
+    ClientResponse changeStateToAvailable(@PathVariable UUID facilityId) throws InterruptedException;
 }

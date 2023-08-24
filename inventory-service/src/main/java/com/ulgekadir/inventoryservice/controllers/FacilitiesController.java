@@ -54,5 +54,10 @@ public class FacilitiesController {
         return service.checkIfFacilityAvailableThenReserve(id);
     }
 
+    @PutMapping("/change-state-to-available/{id}")
+    public ClientResponse changeStateToAvailable(@PathVariable UUID id) {
+        return service.changeStateToAvailable(id);
+    }
+
 
 }

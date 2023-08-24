@@ -82,10 +82,21 @@ public class FacilityService {
     }
 
     public void changeStateToReserved(UUID id) {
-            Facility facility = repository.findById(id).orElseThrow();
-            facility.setState(State.RESERVED);
-            repository.save(facility);
+        Facility facility = repository.findById(id).orElseThrow();
+        facility.setState(State.RESERVED);
+        repository.save(facility);
     }
+
+    public ClientResponse changeStateToAvailable(UUID id) {
+        ClientResponse response = new ClientResponse();
+        Facility facility = repository.findById(id).orElseThrow();
+        facility.setState(State.AVAILABLE);
+        repository.save(facility);
+        response.setSuccess(true);
+        return response;
+    }
+
+
 
     private void sendKafkaFacilityCreatedEvent(Facility createdFacility) {
         FacilityCreatedEvent event = mapper.forResponse().map(createdFacility, FacilityCreatedEvent.class);
@@ -106,13 +117,12 @@ public class FacilityService {
             rules.checkIfFacilityExists(id);
             rules.checkFacilityAvailability(id);
             response.setSuccess(true);
-            Facility facility = repository.findById(id).orElseThrow();
-            facility.setState(State.RESERVED);
-            repository.save(facility);
         } catch (BusinessException exception) {
             response.setSuccess(false);
             response.setMessage(exception.getMessage());
         }
     }
+
+
 
 }

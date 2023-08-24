@@ -38,4 +38,9 @@ public class FiltersController {
     public ClientResponse changeStateToReserved(@PathVariable UUID facilityId) {
        return service.changeStateToReserved(facilityId);
     }
+
+    @PutMapping("/change-state-to-available/{facilityId}")
+    public ClientResponse changeStateToAvailable(@PathVariable UUID facilityId) {
+       return service.changeStateToAvailable(facilityId);
+    }
 }

@@ -15,4 +15,10 @@ public class FacilityClientFallback implements FacilityClient {
         log.info("INVENTORY SERVICE IS DOWN! CheckIfFacilityAvailableAndReserve");
         throw new RuntimeException("INVENTORY SERVICE IS DOWN!");
     }
+
+    @Override
+    public ClientResponse changeStateToAvailable(UUID facilityId) throws InterruptedException {
+        log.info("INVENTORY SERVICE IS DOWN! ChangeStateToAvailable");
+        throw new RuntimeException("INVENTORY SERVICE IS DOWN!");
+    }
 }

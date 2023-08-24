@@ -65,4 +65,19 @@ public class FilterService {
         return response;
     }
 
+    public ClientResponse  changeStateToAvailable(UUID facilityId){
+        ClientResponse response = new ClientResponse();
+        Filter filter = repository.findByFacilityId(facilityId);
+        filter.setState("AVAILABLE");
+        repository.save(filter);
+        try {
+            response.setSuccess(true);
+
+        } catch (BusinessException exception) {
+            response.setSuccess(false);
+            response.setMessage(exception.getMessage());
+        }
+        return response;
+    }
+
 }

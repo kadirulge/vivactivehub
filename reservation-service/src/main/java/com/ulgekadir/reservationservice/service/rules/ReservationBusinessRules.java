@@ -3,8 +3,10 @@ package com.ulgekadir.reservationservice.service.rules;
 import com.ulgekadir.commonpackage.exceptions.BusinessException;
 import com.ulgekadir.commonpackage.utils.constants.Messages;
 import com.ulgekadir.commonpackage.utils.dtos.ClientResponse;
+import com.ulgekadir.commonpackage.utils.dtos.CreateReservationPaymentRequest;
 import com.ulgekadir.reservationservice.clients.FacilityClient;
 import com.ulgekadir.reservationservice.clients.FilterClient;
+import com.ulgekadir.reservationservice.clients.PaymentClient;
 import com.ulgekadir.reservationservice.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,15 +17,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ReservationBusinessRules {
     private final ReservationRepository repository;
-    private final FacilityClient facilityClient;
-    private final FilterClient filterClient;
-
-    public void ensureFacilityIsAvailable(UUID facilityId) throws InterruptedException {
-        ClientResponse response = facilityClient.checkIfFacilityAvailableAndReserve(facilityId);
-        checkClientResponse(response);
-        ClientResponse response2 = filterClient.changeStateToReserved(facilityId);
-        checkClientResponse(response2);
-    }
+    private final PaymentClient paymentClient;
 
     public void checkIfReservationExists(UUID id) {
         if (!repository.existsById(id)) {
@@ -31,8 +25,16 @@ public class ReservationBusinessRules {
         }
     }
 
-    private void checkClientResponse(ClientResponse response) {
+    public void checkClientResponse(ClientResponse response) {
         if (!response.isSuccess()) {
+            throw new BusinessException(response.getMessage());
+        }
+    }
+
+    public void ensurePaymentIsProcessed(CreateReservationPaymentRequest request) throws InterruptedException {
+        ClientResponse response = paymentClient.processRentalPayment(request);
+        if(!response.isSuccess())
+        {
             throw new BusinessException(response.getMessage());
         }
     }

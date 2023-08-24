@@ -14,4 +14,10 @@ public class FilterClientFallback implements FilterClient {
         log.info("FILTER SERVICE IS DOWN! ChangeStateToReserved");
         throw new RuntimeException("FILTER SERVICE IS DOWN!");
     }
+
+    @Override
+    public ClientResponse changeStateToAvailable(UUID facilityId) throws InterruptedException {
+        log.info("FILTER SERVICE IS DOWN! ChangeStateToAvailable");
+        throw new RuntimeException("FILTER SERVICE IS DOWN!");
+    }
 }
