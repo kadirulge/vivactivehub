@@ -1,5 +1,7 @@
 package com.ulgekadir.filterservice.service;
 
+import com.ulgekadir.commonpackage.exceptions.BusinessException;
+import com.ulgekadir.commonpackage.utils.dtos.ClientResponse;
 import com.ulgekadir.commonpackage.utils.mappers.ModelMapperService;
 import com.ulgekadir.filterservice.dtos.GetAllFiltersResponse;
 import com.ulgekadir.filterservice.dtos.GetFilterResponse;
@@ -46,6 +48,21 @@ public class FilterService {
 
     public void deleteAllByInstitutionId(UUID institutionId){
         repository.deleteAllByInstitutionId(institutionId);
+    }
+
+    public ClientResponse  changeStateToReserved(UUID facilityId){
+        ClientResponse response = new ClientResponse();
+        Filter filter = repository.findByFacilityId(facilityId);
+        filter.setState("RESERVED");
+        repository.save(filter);
+        try {
+            response.setSuccess(true);
+
+        } catch (BusinessException exception) {
+            response.setSuccess(false);
+            response.setMessage(exception.getMessage());
+        }
+        return response;
     }
 
 }

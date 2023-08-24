@@ -1,15 +1,13 @@
 package com.ulgekadir.filterservice.controllers;
 
+import com.ulgekadir.commonpackage.utils.dtos.ClientResponse;
 import com.ulgekadir.filterservice.dtos.GetAllFiltersResponse;
 import com.ulgekadir.filterservice.dtos.GetFilterResponse;
 import com.ulgekadir.filterservice.entities.Filter;
 import com.ulgekadir.filterservice.service.FilterService;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -34,5 +32,10 @@ public class FiltersController {
     @GetMapping("/{id}")
     public GetFilterResponse getByIId(@PathVariable UUID id) {
         return service.getById(id);
+    }
+
+    @PutMapping("/change-state-to-reserved/{facilityId}")
+    public ClientResponse changeStateToReserved(@PathVariable UUID facilityId) {
+       return service.changeStateToReserved(facilityId);
     }
 }

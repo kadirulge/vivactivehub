@@ -4,6 +4,7 @@ import com.ulgekadir.commonpackage.exceptions.BusinessException;
 import com.ulgekadir.commonpackage.utils.constants.Messages;
 import com.ulgekadir.commonpackage.utils.dtos.ClientResponse;
 import com.ulgekadir.reservationservice.clients.FacilityClient;
+import com.ulgekadir.reservationservice.clients.FilterClient;
 import com.ulgekadir.reservationservice.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,13 @@ import java.util.UUID;
 public class ReservationBusinessRules {
     private final ReservationRepository repository;
     private final FacilityClient facilityClient;
+    private final FilterClient filterClient;
 
     public void ensureFacilityIsAvailable(UUID facilityId) throws InterruptedException {
         ClientResponse response = facilityClient.checkIfFacilityAvailableAndReserve(facilityId);
         checkClientResponse(response);
+        ClientResponse response2 = filterClient.changeStateToReserved(facilityId);
+        checkClientResponse(response2);
     }
 
     public void checkIfReservationExists(UUID id) {
