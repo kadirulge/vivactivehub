@@ -1,6 +1,7 @@
 package com.ulgekadir.inventoryservice.controllers;
 
 import com.ulgekadir.commonpackage.utils.dtos.ClientResponse;
+import com.ulgekadir.commonpackage.utils.dtos.FacilityClientResponse;
 import com.ulgekadir.inventoryservice.dtos.requests.create.CreateFacilityRequest;
 import com.ulgekadir.inventoryservice.dtos.requests.update.UpdateFacilityRequest;
 import com.ulgekadir.inventoryservice.dtos.responses.create.CreateFacilityResponse;
@@ -59,5 +60,9 @@ public class FacilitiesController {
         return service.changeStateToAvailable(id);
     }
 
-
+    @GetMapping("/get-facility-for-invoice/{id}")
+    public FacilityClientResponse getFacilityForInvoice(@PathVariable UUID id)
+    {
+        return service.getFacilityForInvoice(id);
+    }
 }

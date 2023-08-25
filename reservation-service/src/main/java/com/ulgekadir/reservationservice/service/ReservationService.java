@@ -1,9 +1,12 @@
 package com.ulgekadir.reservationservice.service;
 
+import com.ulgekadir.commonpackage.events.ReservationPaymentCreatedEvent;
 import com.ulgekadir.commonpackage.exceptions.BusinessException;
 import com.ulgekadir.commonpackage.utils.constants.Messages;
 import com.ulgekadir.commonpackage.utils.dtos.ClientResponse;
 import com.ulgekadir.commonpackage.utils.dtos.CreateReservationPaymentRequest;
+import com.ulgekadir.commonpackage.utils.dtos.FacilityClientResponse;
+import com.ulgekadir.commonpackage.utils.kafka.KafkaProducer;
 import com.ulgekadir.commonpackage.utils.mappers.ModelMapperService;
 import com.ulgekadir.reservationservice.clients.FacilityClient;
 import com.ulgekadir.reservationservice.clients.FilterClient;
@@ -21,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,6 +34,7 @@ public class ReservationService {
     private final ReservationRepository repository;
     private final ModelMapperService mapper;
     private final ReservationBusinessRules rules;
+    private final KafkaProducer producer;
     private final FacilityClient facilityClient;
     private final FilterClient filterClient;
 
@@ -67,6 +72,19 @@ public class ReservationService {
 
         Reservation createdReservation = repository.save(reservation);
         CreateReservationResponse response = mapper.forResponse().map(createdReservation, CreateReservationResponse.class);
+
+        FacilityClientResponse facilityClientResponse = facilityClient.getFacilityForInvoice(request.getFacilityId());
+        ReservationPaymentCreatedEvent reservationPaymentCreatedEvent = new ReservationPaymentCreatedEvent(
+                request.getCardHolder(),
+                facilityClientResponse.getCategoryName(),
+                facilityClientResponse.getInstitutionName(),
+                reservation.getHourlyRate(),
+                reservation.getTotalPrice(),
+                reservation.getReservedForHours(),
+                LocalDateTime.now()
+        );
+        sendKafkaRentalPaymentCreatedEvent(reservationPaymentCreatedEvent);
+
         return response;
     }
 
@@ -90,5 +108,10 @@ public class ReservationService {
         BigDecimal hourlyRate = reservation.getHourlyRate();
         BigDecimal reservedForHours = BigDecimal.valueOf(reservation.getReservedForHours());
         return hourlyRate.multiply(reservedForHours);
+    }
+
+    private void sendKafkaRentalPaymentCreatedEvent(ReservationPaymentCreatedEvent event)
+    {
+        producer.sendMessage(event, "rental-payment-created");
     }
 }

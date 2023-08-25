@@ -22,4 +22,11 @@ public class CreateReservationRequest {
     @Min(1)
     private int reservedForHours;
 
+    // Credit Card Information
+    private String cardNumber;
+    private String cardHolder;
+    private int cardExpirationYear;
+    private int cardExpirationMonth;
+    private String cardCvv;
+
 }

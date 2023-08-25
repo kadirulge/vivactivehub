@@ -6,6 +6,7 @@ import com.ulgekadir.commonpackage.events.FacilityUpdatedEvent;
 import com.ulgekadir.commonpackage.exceptions.BusinessException;
 import com.ulgekadir.commonpackage.utils.constants.Messages;
 import com.ulgekadir.commonpackage.utils.dtos.ClientResponse;
+import com.ulgekadir.commonpackage.utils.dtos.FacilityClientResponse;
 import com.ulgekadir.commonpackage.utils.kafka.KafkaProducer;
 import com.ulgekadir.commonpackage.utils.mappers.ModelMapperService;
 import com.ulgekadir.inventoryservice.dtos.requests.create.CreateFacilityRequest;
@@ -78,6 +79,13 @@ public class FacilityService {
         ClientResponse response = new ClientResponse();
         validateFacilityAvailability(id, response);
         changeStateToReserved(id);
+        return response;
+    }
+    public FacilityClientResponse getFacilityForInvoice(UUID id)
+    {
+        rules.checkIfFacilityExists(id);
+        Facility facility = repository.findById(id).orElseThrow();
+        FacilityClientResponse response = mapper.forResponse().map(facility, FacilityClientResponse.class);
         return response;
     }
 
